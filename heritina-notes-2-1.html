@@ -1,0 +1,1811 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>HERITINA NOTE 🎭</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose-deep: #C2185B;
+    --rose-main: #E91E8C;
+    --rose-soft: #F48FB1;
+    --rose-blush: #FCE4EC;
+    --rose-pale: #FFF0F5;
+    --rose-lilac: #CE93D8;
+    --rose-lilac-dark: #9C27B0;
+    --rose-gold: #F8BBD0;
+    --white: #FFFFFF;
+    --text-dark: #3D1A2F;
+    --text-mid: #7B3F6E;
+    --text-soft: #B06090;
+    --shadow-rose: 0 8px 32px rgba(233,30,140,0.18);
+    --shadow-deep: 0 20px 60px rgba(194,24,91,0.22);
+    --glass: rgba(255,255,255,0.72);
+    --glass-border: rgba(233,30,140,0.18);
+    --radius-card: 28px;
+    --radius-btn: 50px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(135deg, #FCE4EC 0%, #F8BBD0 25%, #CE93D8 60%, #F48FB1 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Animated background blobs */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -120px; left: -120px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(233,30,140,0.22) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: blobFloat 7s ease-in-out infinite alternate;
+    pointer-events: none; z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -100px; right: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(156,39,176,0.18) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: blobFloat 9s ease-in-out infinite alternate-reverse;
+    pointer-events: none; z-index: 0;
+  }
+
+  @keyframes blobFloat {
+    from { transform: scale(1) translate(0,0); }
+    to { transform: scale(1.15) translate(30px, 20px); }
+  }
+
+  /* ── TOP HEADER ── */
+  .header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(252,228,236,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1.5px solid var(--glass-border);
+    padding: 14px 20px 10px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 4px 24px rgba(233,30,140,0.10);
+  }
+  .header-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.75rem;
+    background: linear-gradient(135deg, var(--rose-deep), var(--rose-main), var(--rose-lilac-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.5px;
+  }
+  .header-icons { display: flex; gap: 10px; align-items: center; }
+  .icon-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1.5px solid var(--glass-border);
+    background: var(--glass);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.15rem; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+    box-shadow: 0 2px 8px rgba(233,30,140,0.12);
+  }
+  .icon-btn:hover { transform: scale(1.12); background: var(--rose-blush); box-shadow: var(--shadow-rose); }
+  .icon-btn:active { transform: scale(0.95); }
+
+  /* ── SCROLLABLE BODY ── */
+  .app-body {
+    position: relative; z-index: 1;
+    padding: 20px 16px 120px;
+    max-width: 640px; margin: 0 auto;
+  }
+
+  /* ── TABS ── */
+  .tabs {
+    display: flex; gap: 8px;
+    background: rgba(255,255,255,0.5);
+    border-radius: var(--radius-btn);
+    padding: 5px;
+    border: 1.5px solid var(--glass-border);
+    margin-bottom: 22px;
+    box-shadow: 0 2px 12px rgba(233,30,140,0.10);
+  }
+  .tab-btn {
+    flex: 1; padding: 10px 8px;
+    border: none; border-radius: var(--radius-btn);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.82rem; font-weight: 600;
+    cursor: pointer; transition: all 0.3s;
+    background: transparent; color: var(--text-mid);
+    letter-spacing: 0.3px;
+  }
+  .tab-btn.active {
+    background: linear-gradient(135deg, var(--rose-main), var(--rose-deep));
+    color: white;
+    box-shadow: 0 4px 16px rgba(233,30,140,0.30);
+  }
+  .tab-btn:not(.active):hover { background: var(--rose-blush); }
+
+  /* ── SECTION PANELS ── */
+  .panel { display: none; animation: fadeSlide 0.38s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-radius: var(--radius-card);
+    border: 1.5px solid var(--glass-border);
+    padding: 22px 20px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-rose);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 4px;
+    background: linear-gradient(90deg, var(--rose-main), var(--rose-lilac-dark), var(--rose-main));
+    background-size: 200%;
+    animation: shimmer 3s linear infinite;
+  }
+  @keyframes shimmer {
+    from { background-position: 0% center; }
+    to { background-position: 200% center; }
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: var(--shadow-deep); }
+
+  .card-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  }
+  .card-icon {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, var(--rose-main), var(--rose-deep));
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 12px rgba(233,30,140,0.30);
+    flex-shrink: 0;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.08rem;
+    color: var(--text-dark);
+    font-weight: 700;
+  }
+  .card-sub {
+    font-size: 0.75rem; color: var(--text-soft); margin-top: 1px; font-weight: 500;
+  }
+
+  /* ── LABELS & FIELDS ── */
+  .field-label {
+    font-size: 0.75rem; font-weight: 700;
+    color: var(--rose-main);
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 6px; display: block;
+  }
+  .field-input, .field-textarea, .field-select {
+    width: 100%;
+    background: rgba(255,255,255,0.80);
+    border: 1.5px solid rgba(233,30,140,0.20);
+    border-radius: 16px;
+    padding: 12px 16px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.92rem; font-weight: 500;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  .field-input:focus, .field-textarea:focus, .field-select:focus {
+    border-color: var(--rose-main);
+    box-shadow: 0 0 0 3px rgba(233,30,140,0.13);
+    background: white;
+  }
+  .field-textarea {
+    resize: none; min-height: 110px; line-height: 1.65;
+  }
+  .field-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M6 7L0 0h12z' fill='%23E91E8C'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 16px center;
+    padding-right: 40px; cursor: pointer;
+  }
+  .field-group { margin-bottom: 14px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+
+  /* ── TAGS / BADGES ── */
+  .tags-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .tag {
+    padding: 5px 14px;
+    border-radius: 50px;
+    font-size: 0.75rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+    border: 1.5px solid transparent;
+    letter-spacing: 0.3px;
+  }
+  .tag-rose { background: var(--rose-blush); color: var(--rose-deep); border-color: rgba(233,30,140,0.20); }
+  .tag-lilac { background: #F3E5F5; color: var(--rose-lilac-dark); border-color: rgba(156,39,176,0.20); }
+  .tag-gold { background: #FFF8E1; color: #BF8A00; border-color: rgba(255,193,7,0.30); }
+  .tag.selected { background: linear-gradient(135deg, var(--rose-main), var(--rose-deep)); color: white; border-color: transparent; box-shadow: 0 3px 10px rgba(233,30,140,0.30); }
+  .tag:hover:not(.selected) { transform: scale(1.06); }
+
+  /* ── RATING STARS ── */
+  .star-row { display: flex; gap: 6px; }
+  .star {
+    font-size: 1.6rem; cursor: pointer;
+    filter: grayscale(1) opacity(0.35);
+    transition: transform 0.15s, filter 0.15s;
+  }
+  .star.on { filter: none; }
+  .star:hover { transform: scale(1.25); }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    width: 100%; padding: 15px;
+    background: linear-gradient(135deg, var(--rose-main) 0%, var(--rose-deep) 100%);
+    color: white; border: none; border-radius: var(--radius-btn);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer; letter-spacing: 0.5px;
+    box-shadow: 0 8px 24px rgba(233,30,140,0.38);
+    transition: all 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .btn-primary::after {
+    content: '';
+    position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+    transition: left 0.45s;
+  }
+  .btn-primary:hover::after { left: 150%; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(233,30,140,0.45); }
+  .btn-primary:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(233,30,140,0.30); }
+
+  .btn-soft {
+    padding: 9px 20px;
+    background: var(--rose-blush);
+    color: var(--rose-deep); border: 1.5px solid rgba(233,30,140,0.22);
+    border-radius: var(--radius-btn);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.82rem; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .btn-soft:hover { background: var(--rose-gold); }
+  .btn-soft.danger { background: #FFEBEE; color: #C62828; border-color: rgba(198,40,40,0.22); }
+  .btn-soft.danger:hover { background: #FFCDD2; }
+
+  /* ── NOTE ITEMS (saved list) ── */
+  .note-item {
+    background: var(--glass);
+    border-radius: 20px;
+    border: 1.5px solid var(--glass-border);
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 4px 16px rgba(233,30,140,0.10);
+    cursor: pointer;
+    transition: all 0.25s;
+    position: relative;
+    animation: popIn 0.35s ease;
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.94) translateY(8px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  .note-item:hover { transform: translateY(-2px); box-shadow: var(--shadow-rose); }
+  .note-item-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .note-item-emoji { font-size: 1.5rem; flex-shrink: 0; }
+  .note-item-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.97rem; color: var(--text-dark); font-weight: 700;
+    flex: 1;
+  }
+  .note-item-date { font-size: 0.70rem; color: var(--text-soft); font-weight: 500; margin-top: 2px; white-space: nowrap; }
+  .note-item-preview { font-size: 0.80rem; color: var(--text-mid); margin-top: 7px; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .note-item-footer { display: flex; gap: 6px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+  .note-badge {
+    font-size: 0.68rem; font-weight: 700; padding: 3px 10px;
+    border-radius: 50px; letter-spacing: 0.3px;
+  }
+  .badge-theatre { background: #FCE4EC; color: #C2185B; }
+  .badge-leçon { background: #F3E5F5; color: #7B1FA2; }
+  .badge-autre { background: #E8F5E9; color: #2E7D32; }
+  .badge-exam { background: #FFF3E0; color: #E65100; }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap {
+    position: relative; margin-bottom: 18px;
+  }
+  .search-icon {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    font-size: 1rem; pointer-events: none;
+  }
+  .search-input {
+    width: 100%; padding: 13px 18px 13px 44px;
+    background: var(--glass);
+    border: 1.5px solid var(--glass-border);
+    border-radius: var(--radius-btn);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.90rem; font-weight: 500; color: var(--text-dark);
+    outline: none; transition: all 0.25s;
+    box-shadow: 0 2px 10px rgba(233,30,140,0.08);
+  }
+  .search-input:focus { border-color: var(--rose-main); background: white; box-shadow: 0 0 0 3px rgba(233,30,140,0.10); }
+  .search-input::placeholder { color: var(--text-soft); }
+
+  /* ── SECTION LABELS ── */
+  .section-label {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.35rem;
+    color: var(--rose-deep);
+    margin-bottom: 14px; margin-top: 4px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1; height: 1.5px;
+    background: linear-gradient(90deg, rgba(233,30,140,0.30), transparent);
+    border-radius: 2px;
+  }
+
+  /* ── STATS GRID ── */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px; }
+  .stat-card {
+    background: var(--glass);
+    border-radius: 20px; border: 1.5px solid var(--glass-border);
+    padding: 18px 16px; text-align: center;
+    box-shadow: 0 4px 14px rgba(233,30,140,0.10);
+    transition: transform 0.2s;
+  }
+  .stat-card:hover { transform: translateY(-3px); }
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    background: linear-gradient(135deg, var(--rose-main), var(--rose-deep));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+  .stat-label { font-size: 0.72rem; color: var(--text-soft); font-weight: 600; margin-top: 5px; letter-spacing: 0.5px; text-transform: uppercase; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+    background: rgba(252,228,236,0.90);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-top: 1.5px solid var(--glass-border);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    display: flex; justify-content: space-around;
+    box-shadow: 0 -8px 32px rgba(233,30,140,0.10);
+  }
+  .nav-item {
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+    cursor: pointer; transition: all 0.2s;
+    padding: 6px 16px; border-radius: 16px;
+    font-size: 0.64rem; font-weight: 700;
+    color: var(--text-soft); letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: none; background: none;
+  }
+  .nav-item .nav-icon { font-size: 1.4rem; transition: transform 0.2s; }
+  .nav-item.active { color: var(--rose-main); background: rgba(233,30,140,0.10); }
+  .nav-item.active .nav-icon { transform: scale(1.2); }
+  .nav-item:hover { color: var(--rose-main); }
+
+  /* ── FAB ── */
+  .fab {
+    position: fixed; bottom: 90px; right: 20px; z-index: 300;
+    width: 58px; height: 58px;
+    background: linear-gradient(135deg, var(--rose-main), var(--rose-deep));
+    border-radius: 50%; border: none;
+    font-size: 1.6rem; color: white; cursor: pointer;
+    box-shadow: 0 8px 28px rgba(233,30,140,0.45);
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s;
+  }
+  .fab:hover { transform: scale(1.10) rotate(10deg); box-shadow: 0 12px 36px rgba(233,30,140,0.55); }
+  .fab:active { transform: scale(0.95); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 500;
+    background: rgba(61,26,47,0.45);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: flex-end; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-sheet {
+    width: 100%; max-width: 640px;
+    background: var(--rose-pale);
+    border-radius: 30px 30px 0 0;
+    padding: 16px 20px 40px;
+    max-height: 92vh; overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.38s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 0 -12px 48px rgba(233,30,140,0.20);
+  }
+  .modal-overlay.open .modal-sheet { transform: translateY(0); }
+  .modal-handle {
+    width: 42px; height: 5px;
+    background: rgba(233,30,140,0.25);
+    border-radius: 3px; margin: 0 auto 18px;
+  }
+  .modal-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.6rem; color: var(--rose-deep); margin-bottom: 18px; text-align: center;
+  }
+
+  /* ── TOAST ── */
+  .toast {
+    position: fixed; bottom: 110px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: linear-gradient(135deg, var(--rose-deep), var(--rose-lilac-dark));
+    color: white; padding: 12px 26px;
+    border-radius: 50px; font-weight: 700; font-size: 0.88rem;
+    box-shadow: 0 8px 24px rgba(194,24,91,0.40);
+    opacity: 0; pointer-events: none;
+    transition: all 0.35s;
+    white-space: nowrap; z-index: 999;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center; padding: 50px 20px;
+  }
+  .empty-emoji { font-size: 4rem; display: block; margin-bottom: 14px; }
+  .empty-title { font-family: 'Dancing Script', cursive; font-size: 1.5rem; color: var(--rose-main); margin-bottom: 8px; }
+  .empty-desc { font-size: 0.85rem; color: var(--text-soft); line-height: 1.6; }
+
+  /* ── DETAIL VIEW ── */
+  .detail-view {
+    position: fixed; inset: 0; z-index: 400;
+    background: var(--rose-pale);
+    transform: translateX(100%);
+    transition: transform 0.38s cubic-bezier(0.25,0.46,0.45,0.94);
+    overflow-y: auto;
+    padding-bottom: 40px;
+  }
+  .detail-view.open { transform: translateX(0); }
+  .detail-header {
+    position: sticky; top: 0;
+    background: rgba(255,240,245,0.88);
+    backdrop-filter: blur(16px);
+    padding: 16px 20px 12px;
+    display: flex; align-items: center; gap: 12px;
+    border-bottom: 1.5px solid var(--glass-border);
+    z-index: 10;
+  }
+  .back-btn {
+    width: 38px; height: 38px;
+    border-radius: 50%; border: 1.5px solid var(--glass-border);
+    background: var(--glass); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; transition: all 0.2s;
+  }
+  .back-btn:hover { background: var(--rose-blush); transform: scale(1.08); }
+  .detail-content { padding: 24px 20px; }
+  .detail-emoji-big { font-size: 3rem; display: block; margin-bottom: 10px; }
+  .detail-main-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-dark); font-weight: 700; line-height: 1.3; margin-bottom: 8px; }
+  .detail-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .detail-body { font-size: 0.93rem; color: var(--text-mid); line-height: 1.80; white-space: pre-wrap; }
+  .detail-section-title { font-family: 'Dancing Script', cursive; font-size: 1.1rem; color: var(--rose-main); margin: 18px 0 8px; }
+  .divider { height: 1.5px; background: linear-gradient(90deg, rgba(233,30,140,0.20), transparent); margin: 18px 0; border-radius: 2px; }
+
+  /* ── CHECKLIST ── */
+  .checklist { list-style: none; }
+  .checklist li {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 0; border-bottom: 1px solid rgba(233,30,140,0.08);
+    font-size: 0.88rem; color: var(--text-mid); cursor: pointer;
+  }
+  .checklist li:last-child { border: none; }
+  .check-box {
+    width: 22px; height: 22px; border-radius: 8px;
+    border: 2px solid rgba(233,30,140,0.30);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; transition: all 0.2s; font-size: 0.75rem;
+  }
+  .checklist li.done .check-box { background: linear-gradient(135deg, var(--rose-main), var(--rose-deep)); border-color: transparent; color: white; }
+  .checklist li.done span { text-decoration: line-through; color: var(--text-soft); }
+
+  @media (min-width: 500px) {
+    .app-body { padding: 24px 24px 130px; }
+  }
+
+  /* ── IMAGE UPLOAD ── */
+  .img-upload-btn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 18px;
+    background: rgba(233,30,140,0.06);
+    border: 2px dashed rgba(233,30,140,0.30);
+    border-radius: 18px;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.88rem; font-weight: 700;
+    color: var(--rose-main);
+    transition: all 0.25s;
+    width: 100%; justify-content: center;
+    letter-spacing: 0.3px;
+  }
+  .img-upload-btn:hover {
+    background: rgba(233,30,140,0.12);
+    border-color: var(--rose-main);
+    transform: translateY(-1px);
+  }
+  .img-upload-btn span { font-size: 1.2rem; }
+  .img-preview-wrap {
+    position: relative;
+    margin-top: 10px;
+    border-radius: 18px;
+    overflow: hidden;
+    display: none;
+  }
+  .img-preview-wrap.has-image { display: block; }
+  .img-preview {
+    width: 100%; max-height: 220px;
+    object-fit: cover;
+    border-radius: 18px;
+    display: block;
+    border: 1.5px solid var(--glass-border);
+  }
+  .img-remove-btn {
+    position: absolute; top: 8px; right: 8px;
+    width: 30px; height: 30px;
+    background: rgba(61,26,47,0.70);
+    color: white; border: none;
+    border-radius: 50%; cursor: pointer;
+    font-size: 0.85rem; display: flex;
+    align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .img-remove-btn:hover { background: rgba(198,40,40,0.85); }
+  /* Note card thumbnail */
+  .note-thumb {
+    width: 52px; height: 52px;
+    object-fit: cover; border-radius: 12px;
+    border: 1.5px solid var(--glass-border);
+    flex-shrink: 0;
+  }
+  /* Detail full image */
+  .detail-img {
+    width: 100%; border-radius: 20px;
+    object-fit: cover; max-height: 280px;
+    border: 1.5px solid var(--glass-border);
+    margin-bottom: 18px;
+    display: block;
+  }
+
+  /* ── GALLERY (multi-images) ── */
+  .gallery-upload-area {
+    border: 2px dashed rgba(233,30,140,0.30);
+    border-radius: 18px;
+    padding: 16px;
+    background: rgba(233,30,140,0.04);
+    transition: all 0.25s;
+  }
+  .gallery-upload-area:hover { border-color: var(--rose-main); background: rgba(233,30,140,0.08); }
+  .gallery-add-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px 18px;
+    background: linear-gradient(135deg, var(--rose-main), var(--rose-deep));
+    color: white; border: none; border-radius: 50px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; margin-bottom: 12px;
+    box-shadow: 0 4px 14px rgba(233,30,140,0.30);
+    transition: all 0.2s; width: 100%;
+  }
+  .gallery-add-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(233,30,140,0.40); }
+  .gallery-count {
+    font-size: 0.72rem; color: var(--text-soft); font-weight: 600;
+    text-align: center; margin-bottom: 10px;
+  }
+  .gallery-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; margin-top: 4px;
+  }
+  .gallery-item {
+    position: relative; border-radius: 14px; overflow: hidden;
+    background: rgba(233,30,140,0.06);
+    animation: popIn 0.3s ease;
+  }
+  .gallery-item-img {
+    width: 100%; height: 110px;
+    object-fit: cover; display: block;
+    border-radius: 14px 14px 0 0;
+  }
+  .gallery-item-title-input {
+    width: 100%; border: none;
+    background: rgba(255,255,255,0.85);
+    border-top: 1.5px solid rgba(233,30,140,0.15);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.75rem; font-weight: 600;
+    color: var(--text-dark);
+    padding: 6px 10px;
+    outline: none;
+    border-radius: 0 0 14px 14px;
+  }
+  .gallery-item-title-input:focus { background: white; border-color: var(--rose-main); }
+  .gallery-item-title-input::placeholder { color: var(--text-soft); }
+  .gallery-item-remove {
+    position: absolute; top: 6px; right: 6px;
+    width: 24px; height: 24px;
+    background: rgba(61,26,47,0.72);
+    color: white; border: none; border-radius: 50%;
+    font-size: 0.7rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .gallery-item-remove:hover { background: rgba(198,40,40,0.88); }
+
+  /* Detail gallery display */
+  .detail-gallery { margin-bottom: 18px; }
+  .detail-gallery-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.1rem; color: var(--rose-main); margin-bottom: 10px;
+  }
+  .detail-gallery-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+  }
+  .detail-gallery-item { position: relative; border-radius: 14px; overflow: hidden; cursor: pointer; }
+  .detail-gallery-item img {
+    width: 100%; height: 120px; object-fit: cover; display: block;
+    border-radius: 14px 14px 0 0;
+    transition: transform 0.3s;
+  }
+  .detail-gallery-item:hover img { transform: scale(1.04); }
+  .detail-gallery-caption {
+    background: rgba(255,255,255,0.88);
+    padding: 5px 10px;
+    font-size: 0.73rem; font-weight: 600; color: var(--text-mid);
+    border-radius: 0 0 14px 14px;
+    border-top: 1.5px solid rgba(233,30,140,0.12);
+    min-height: 26px;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 900;
+    background: rgba(20,5,15,0.92);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  .lightbox.open { opacity: 1; pointer-events: all; }
+  .lightbox-img {
+    max-width: 94vw; max-height: 75vh;
+    object-fit: contain; border-radius: 18px;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  }
+  .lightbox-caption {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.2rem; color: #F48FB1;
+    margin-top: 14px; text-align: center;
+  }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 20px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    color: white; border: none; font-size: 1.1rem;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .lightbox-nav {
+    display: flex; gap: 20px; margin-top: 16px;
+  }
+  .lightbox-nav button {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: rgba(233,30,140,0.25);
+    color: white; border: 1.5px solid rgba(233,30,140,0.40);
+    font-size: 1.1rem; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .lightbox-nav button:hover { background: rgba(233,30,140,0.50); }
+
+  /* ── CLOUD SAVE ── */
+  .cloud-modal-overlay {
+    position: fixed; inset: 0; z-index: 600;
+    background: rgba(61,26,47,0.50);
+    backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s; padding: 20px;
+  }
+  .cloud-modal-overlay.open { opacity: 1; pointer-events: all; }
+  .cloud-modal {
+    background: var(--rose-pale);
+    border-radius: 28px; padding: 28px 24px;
+    width: 100%; max-width: 420px;
+    box-shadow: 0 20px 60px rgba(194,24,91,0.25);
+    transform: scale(0.92); transition: transform 0.3s;
+  }
+  .cloud-modal-overlay.open .cloud-modal { transform: scale(1); }
+  .cloud-modal-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.55rem; color: var(--rose-deep);
+    text-align: center; margin-bottom: 6px;
+  }
+  .cloud-modal-sub {
+    font-size: 0.78rem; color: var(--text-soft);
+    text-align: center; margin-bottom: 20px; line-height: 1.55;
+  }
+  .cloud-status {
+    font-size: 0.80rem; font-weight: 600;
+    text-align: center; min-height: 20px;
+    margin: 10px 0; color: var(--rose-main);
+  }
+  .cloud-status.error { color: #C62828; }
+  .cloud-status.success { color: #2E7D32; }
+  .cloud-key-display {
+    background: rgba(233,30,140,0.07);
+    border: 1.5px solid rgba(233,30,140,0.20);
+    border-radius: 14px; padding: 12px 16px;
+    font-size: 0.78rem; color: var(--text-mid);
+    font-family: monospace; word-break: break-all;
+    margin-bottom: 14px; line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-title">heritina Notes</div>
+  <div class="header-icons">
+    <button class="icon-btn" onclick="openCloudModal()" title="Sauvegarde en ligne">☁️</button>
+    <button class="icon-btn" onclick="toggleTheme()" title="Thème">🌙</button>
+    <button class="icon-btn" onclick="exportNotes()" title="Exporter">📤</button>
+  </div>
+</header>
+
+<!-- MAIN BODY -->
+<div class="app-body">
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('accueil',this)">🏠 Accueil</button>
+    <button class="tab-btn" onclick="switchTab('notes',this)">📝 Notes</button>
+    <button class="tab-btn" onclick="switchTab('stats',this)">✨ Stats</button>
+  </div>
+
+  <!-- ═══ PANEL: ACCUEIL ═══ -->
+  <div id="panel-accueil" class="panel active">
+
+    <div class="section-label">✦ Dernières notes</div>
+    <div id="recent-notes-list">
+      <!-- Populated by JS -->
+    </div>
+
+    <div class="section-label">✦ Accès rapide</div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">🎭</div>
+        <div>
+          <div class="card-title">Nouvelle note Théâtre</div>
+          <div class="card-sub">Spectacle, pièce, mise en scène...</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openModal('theatre')">＋ Créer une note théâtre</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📚</div>
+        <div>
+          <div class="card-title">Nouvelle note de Leçon</div>
+          <div class="card-sub">Cours, examen, révision...</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openModal('lecon')">＋ Créer une note de leçon</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">💡</div>
+        <div>
+          <div class="card-title">Note libre</div>
+          <div class="card-sub">Idée, mémo, autre...</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="openModal('libre')">＋ Note libre</button>
+    </div>
+
+  </div>
+
+  <!-- ═══ PANEL: NOTES ═══ -->
+  <div id="panel-notes" class="panel">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="search-input" type="text" placeholder="Chercher une note..." oninput="filterNotes(this.value)" id="search-input">
+    </div>
+    <div class="tags-wrap" style="margin-bottom:16px">
+      <span class="tag tag-rose selected" onclick="filterByTag('all',this)">Toutes</span>
+      <span class="tag tag-rose" onclick="filterByTag('theatre',this)">🎭 Théâtre</span>
+      <span class="tag tag-lilac" onclick="filterByTag('lecon',this)">📚 Leçon</span>
+      <span class="tag tag-gold" onclick="filterByTag('autre',this)">💡 Autre</span>
+    </div>
+    <div id="all-notes-list"><!-- JS --></div>
+  </div>
+
+  <!-- ═══ PANEL: STATS ═══ -->
+  <div id="panel-stats" class="panel">
+    <div class="section-label">✦ Mes statistiques</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-number" id="stat-total">0</div><div class="stat-label">Notes totales</div></div>
+      <div class="stat-card"><div class="stat-number" id="stat-theatre">0</div><div class="stat-label">Théâtre</div></div>
+      <div class="stat-card"><div class="stat-number" id="stat-lecon">0</div><div class="stat-label">Leçons</div></div>
+      <div class="stat-card"><div class="stat-number" id="stat-streak">0</div><div class="stat-label">Jours actifs</div></div>
+    </div>
+
+    <div class="section-label">✦ Checklist du jour</div>
+    <div class="card">
+      <ul class="checklist" id="daily-checklist">
+        <li onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Réviser les répliques</span></li>
+        <li onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Revoir les notes de cours</span></li>
+        <li onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Pratiquer la diction</span></li>
+        <li onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Analyser la mise en scène</span></li>
+        <li onclick="toggleCheck(this)"><div class="check-box">✓</div><span>Écrire une réflexion personnelle</span></li>
+      </ul>
+    </div>
+
+    <div class="card" style="background:linear-gradient(135deg,rgba(233,30,140,0.10),rgba(156,39,176,0.08));">
+      <div style="text-align:center;padding:8px 0;">
+        <div style="font-size:2.5rem;margin-bottom:8px;">💖</div>
+        <div style="font-family:'Dancing Script',cursive;font-size:1.2rem;color:var(--rose-deep);margin-bottom:6px;">"Le théâtre, c'est l'art de vivre plusieurs vies."</div>
+        <div style="font-size:0.75rem;color:var(--text-soft);font-weight:600;">— Citation du jour</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end app-body -->
+
+<!-- ── FAB ── -->
+<button class="fab" onclick="openModal('libre')">＋</button>
+
+<!-- ── BOTTOM NAV ── -->
+<nav class="bottom-nav">
+  <button class="nav-item active" id="nav-accueil" onclick="switchNav('accueil')">
+    <span class="nav-icon">🏠</span>Accueil
+  </button>
+  <button class="nav-item" id="nav-notes" onclick="switchNav('notes')">
+    <span class="nav-icon">📝</span>Notes
+  </button>
+  <button class="nav-item" id="nav-stats" onclick="switchNav('stats')">
+    <span class="nav-icon">✨</span>Stats
+  </button>
+</nav>
+
+<!-- ═══ MODAL: THEATRE ═══ -->
+<div class="modal-overlay" id="modal-theatre">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">🎭 Note Théâtre</div>
+
+    <div class="field-group">
+      <label class="field-label">Titre du spectacle / de la pièce</label>
+      <input class="field-input" id="th-titre" type="text" placeholder="Ex: Roméo et Juliette">
+    </div>
+    <div class="field-row">
+      <div>
+        <label class="field-label">Auteur / Dramaturge</label>
+        <input class="field-input" id="th-auteur" type="text" placeholder="Ex: Shakespeare">
+      </div>
+      <div>
+        <label class="field-label">Date</label>
+        <input class="field-input" id="th-date" type="date">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Lieu / Salle</label>
+      <input class="field-input" id="th-lieu" type="text" placeholder="Ex: Comédie-Française, Paris">
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Catégorie</label>
+      <div class="tags-wrap" id="th-categorie-tags">
+        <span class="tag tag-rose" onclick="selectTag(this,'th-cat')">Tragédie</span>
+        <span class="tag tag-rose" onclick="selectTag(this,'th-cat')">Comédie</span>
+        <span class="tag tag-lilac" onclick="selectTag(this,'th-cat')">Drame</span>
+        <span class="tag tag-lilac" onclick="selectTag(this,'th-cat')">Musical</span>
+        <span class="tag tag-gold" onclick="selectTag(this,'th-cat')">Classique</span>
+        <span class="tag tag-gold" onclick="selectTag(this,'th-cat')">Contemporain</span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Ma note personnelle ⭐</label>
+      <div class="star-row" id="th-stars">
+        <span class="star" onclick="setStars('th-stars',1)">⭐</span>
+        <span class="star" onclick="setStars('th-stars',2)">⭐</span>
+        <span class="star" onclick="setStars('th-stars',3)">⭐</span>
+        <span class="star" onclick="setStars('th-stars',4)">⭐</span>
+        <span class="star" onclick="setStars('th-stars',5)">⭐</span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Analyse de la mise en scène</label>
+      <textarea class="field-textarea" id="th-misescene" placeholder="Décors, costumes, jeu des acteurs, lumières, sons..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Thèmes abordés</label>
+      <input class="field-input" id="th-themes" type="text" placeholder="Ex: amour, trahison, pouvoir...">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Ce que j'ai aimé / pas aimé</label>
+      <textarea class="field-textarea" id="th-avis" placeholder="Ton avis personnel, tes émotions, tes impressions..." style="min-height:80px"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Répliques mémorables / Extraits</label>
+      <textarea class="field-textarea" id="th-repliques" placeholder="Note les répliques qui t'ont marqué..." style="min-height:80px"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Notes complémentaires</label>
+      <textarea class="field-textarea" id="th-notes" placeholder="Références, liens, autres observations..." style="min-height:70px"></textarea>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">📷 Photos / Affiches (max 50)</label>
+      <input type="file" id="th-img-input" accept="image/*" multiple style="display:none" onchange="handleGalleryUpload('th')">
+      <div class="gallery-upload-area">
+        <button class="gallery-add-btn" onclick="document.getElementById('th-img-input').click()">
+          🖼️ Ajouter des images
+        </button>
+        <div class="gallery-count" id="th-gallery-count">0 / 50 images</div>
+        <div class="gallery-grid" id="th-gallery-grid"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:6px">
+      <button class="btn-soft" onclick="closeModal('modal-theatre')" style="flex:1">Annuler</button>
+      <button class="btn-primary" onclick="saveNote('theatre')" style="flex:2">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: LEÇON ═══ -->
+<div class="modal-overlay" id="modal-lecon">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📚 Note de Leçon</div>
+
+    <div class="field-group">
+      <label class="field-label">Titre de la leçon / du cours</label>
+      <input class="field-input" id="lc-titre" type="text" placeholder="Ex: Histoire du théâtre grec">
+    </div>
+    <div class="field-row">
+      <div>
+        <label class="field-label">Matière</label>
+        <select class="field-select" id="lc-matiere">
+          <option value="">Choisir...</option>
+          <option>Théâtre</option>
+          <option>Littérature</option>
+          <option>Histoire de l'art</option>
+          <option>Français</option>
+          <option>Arts du spectacle</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Date</label>
+        <input class="field-input" id="lc-date" type="date">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Type de note</label>
+      <div class="tags-wrap">
+        <span class="tag tag-lilac" onclick="selectTag(this,'lc-type')">📖 Cours</span>
+        <span class="tag tag-lilac" onclick="selectTag(this,'lc-type')">✏️ Exercice</span>
+        <span class="tag tag-rose" onclick="selectTag(this,'lc-type')">📋 Examen</span>
+        <span class="tag tag-gold" onclick="selectTag(this,'lc-type')">🔁 Révision</span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Objectifs du cours</label>
+      <textarea class="field-textarea" id="lc-objectifs" placeholder="Ce que l'on doit apprendre / retenir..." style="min-height:70px"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Contenu principal / Résumé</label>
+      <textarea class="field-textarea" id="lc-contenu" placeholder="Le cours, les définitions, les exemples importants..."></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Notions clés à retenir</label>
+      <input class="field-input" id="lc-notions" type="text" placeholder="Ex: catharsis, unités aristotéliciennes...">
+    </div>
+    <div class="field-group">
+      <label class="field-label">Questions / Zones d'incompréhension</label>
+      <textarea class="field-textarea" id="lc-questions" placeholder="Ce que tu n'as pas compris, à revoir..." style="min-height:70px"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Niveau de compréhension</label>
+      <div class="star-row" id="lc-stars">
+        <span class="star" onclick="setStars('lc-stars',1)">💜</span>
+        <span class="star" onclick="setStars('lc-stars',2)">💜</span>
+        <span class="star" onclick="setStars('lc-stars',3)">💜</span>
+        <span class="star" onclick="setStars('lc-stars',4)">💜</span>
+        <span class="star" onclick="setStars('lc-stars',5)">💜</span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">📷 Photos du cours / Documents (max 50)</label>
+      <input type="file" id="lc-img-input" accept="image/*" multiple style="display:none" onchange="handleGalleryUpload('lc')">
+      <div class="gallery-upload-area">
+        <button class="gallery-add-btn" onclick="document.getElementById('lc-img-input').click()">
+          🖼️ Ajouter des images
+        </button>
+        <div class="gallery-count" id="lc-gallery-count">0 / 50 images</div>
+        <div class="gallery-grid" id="lc-gallery-grid"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:6px">
+      <button class="btn-soft" onclick="closeModal('modal-lecon')" style="flex:1">Annuler</button>
+      <button class="btn-primary" onclick="saveNote('lecon')" style="flex:2">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: LIBRE ═══ -->
+<div class="modal-overlay" id="modal-libre">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">💡 Note Libre</div>
+
+    <div class="field-group">
+      <label class="field-label">Titre</label>
+      <input class="field-input" id="lb-titre" type="text" placeholder="Titre de ta note...">
+    </div>
+    <div class="field-row">
+      <div>
+        <label class="field-label">Catégorie</label>
+        <select class="field-select" id="lb-cat">
+          <option>Idée</option>
+          <option>Mémo</option>
+          <option>Citation</option>
+          <option>Inspiration</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div>
+        <label class="field-label">Emoji</label>
+        <input class="field-input" id="lb-emoji" type="text" placeholder="💡✨🌸" maxlength="3">
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Contenu</label>
+      <textarea class="field-textarea" id="lb-contenu" placeholder="Écris tout ce que tu veux..." style="min-height:180px"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Humeur</label>
+      <div class="tags-wrap">
+        <span class="tag tag-rose" onclick="selectTag(this,'lb-humeur')">😊 Heureuse</span>
+        <span class="tag tag-lilac" onclick="selectTag(this,'lb-humeur')">😌 Calme</span>
+        <span class="tag tag-gold" onclick="selectTag(this,'lb-humeur')">🤔 Pensif</span>
+        <span class="tag tag-rose" onclick="selectTag(this,'lb-humeur')">✨ Inspirée</span>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">📷 Images (max 50)</label>
+      <input type="file" id="lb-img-input" accept="image/*" multiple style="display:none" onchange="handleGalleryUpload('lb')">
+      <div class="gallery-upload-area">
+        <button class="gallery-add-btn" onclick="document.getElementById('lb-img-input').click()">
+          🖼️ Ajouter des images
+        </button>
+        <div class="gallery-count" id="lb-gallery-count">0 / 50 images</div>
+        <div class="gallery-grid" id="lb-gallery-grid"></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:6px">
+      <button class="btn-soft" onclick="closeModal('modal-libre')" style="flex:1">Annuler</button>
+      <button class="btn-primary" onclick="saveNote('libre')" style="flex:2">💾 Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DETAIL VIEW ═══ -->
+<div class="detail-view" id="detail-view">
+  <div class="detail-header">
+    <button class="back-btn" onclick="closeDetail()">←</button>
+    <div style="flex:1">
+      <div style="font-family:'Dancing Script',cursive;font-size:1.1rem;color:var(--rose-main);" id="detail-header-label">Note</div>
+    </div>
+    <button class="btn-soft" onclick="editCurrentNote()" style="font-size:0.75rem;padding:7px 14px">✏️ Modifier</button>
+    <button class="btn-soft danger" onclick="deleteCurrentNote()" style="font-size:0.75rem;padding:7px 14px">🗑️ Suppr.</button>
+  </div>
+  <div class="detail-content" id="detail-content"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img class="lightbox-img" id="lightbox-img" src="" alt="">
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+  <div class="lightbox-nav" onclick="event.stopPropagation()">
+    <button onclick="lightboxNav(-1)">◀</button>
+    <button onclick="lightboxNav(1)">▶</button>
+  </div>
+</div>
+
+<!-- ── CLOUD SAVE MODAL ── -->
+<div class="cloud-modal-overlay" id="cloud-modal">
+  <div class="cloud-modal">
+    <div class="cloud-modal-title">☁️ Sauvegarde en ligne</div>
+    <div class="cloud-modal-sub">Tes notes sont sauvegardées sur JSONBin.io — gratuit, sans compte requis. Garde ta clé secrète pour retrouver tes notes sur un autre appareil !</div>
+
+    <div class="field-group">
+      <label class="field-label">Ta clé personnelle (Bin ID)</label>
+      <input class="field-input" id="cloud-bin-id" type="text" placeholder="Colle ton Bin ID ici..." style="font-family:monospace;font-size:0.82rem">
+    </div>
+    <div class="cloud-key-display" id="cloud-key-display" style="display:none"></div>
+    <div class="cloud-status" id="cloud-status"></div>
+
+    <div style="display:flex;flex-direction:column;gap:10px;margin-top:6px">
+      <button class="btn-primary" onclick="cloudSave()">☁️ Sauvegarder mes notes en ligne</button>
+      <button class="btn-primary" style="background:linear-gradient(135deg,#7B1FA2,#4A148C)" onclick="cloudLoad()">📥 Charger mes notes depuis le cloud</button>
+      <div style="display:flex;gap:10px">
+        <button class="btn-soft" onclick="closeCloudModal()" style="flex:1">Fermer</button>
+        <button class="btn-soft" onclick="copyBinId()" style="flex:1">📋 Copier la clé</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── STATE ──
+let notes = JSON.parse(localStorage.getItem('kawaii-notes') || '[]');
+let currentFilter = 'all';
+let currentNoteIdx = null;
+let selectedTags = {};
+let starValues = {};
+// pendingGalleries: { th: [{src, title}], lc: [...], lb: [...] }
+let pendingGalleries = { th: [], lc: [], lb: [] };
+
+// ── GALLERY IMAGE HANDLING ──
+function handleGalleryUpload(prefix) {
+  const input = document.getElementById(prefix+'-img-input');
+  const files = Array.from(input.files);
+  if(!files.length) return;
+  const gallery = pendingGalleries[prefix];
+  const remaining = 50 - gallery.length;
+  const toProcess = files.slice(0, remaining);
+  if(files.length > remaining) showToast(`⚠️ Max 50 images — ${files.length - remaining} ignorée(s)`);
+
+  toProcess.forEach(file => {
+    if(file.size > 15 * 1024 * 1024) { showToast('❌ Image trop grande (max 15 Mo)'); return; }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 900;
+        let w = img.width, h = img.height;
+        if(w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        const base64 = canvas.toDataURL('image/jpeg', 0.78);
+        gallery.push({ src: base64, title: '' });
+        renderGalleryGrid(prefix);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function renderGalleryGrid(prefix) {
+  const gallery = pendingGalleries[prefix];
+  const grid = document.getElementById(prefix+'-gallery-grid');
+  const count = document.getElementById(prefix+'-gallery-count');
+  count.textContent = `${gallery.length} / 50 images`;
+  grid.innerHTML = gallery.map((item, idx) => `
+    <div class="gallery-item">
+      <img class="gallery-item-img" src="${item.src}" alt="">
+      <button class="gallery-item-remove" onclick="removeGalleryItem('${prefix}',${idx})" title="Supprimer">✕</button>
+      <input class="gallery-item-title-input" type="text" placeholder="Titre (optionnel)" value="${item.title||''}"
+        oninput="updateGalleryTitle('${prefix}',${idx},this.value)">
+    </div>
+  `).join('');
+}
+
+function removeGalleryItem(prefix, idx) {
+  pendingGalleries[prefix].splice(idx, 1);
+  renderGalleryGrid(prefix);
+}
+
+function updateGalleryTitle(prefix, idx, val) {
+  if(pendingGalleries[prefix][idx]) pendingGalleries[prefix][idx].title = val;
+}
+
+function resetGalleryUI(prefix) {
+  pendingGalleries[prefix] = [];
+  renderGalleryGrid(prefix);
+}
+
+function loadGalleryForEdit(prefix, gallery) {
+  pendingGalleries[prefix] = gallery ? gallery.map(g => typeof g === 'string' ? {src:g,title:''} : {...g}) : [];
+  renderGalleryGrid(prefix);
+}
+
+// Legacy single-image compat (kept for old note data that has note.image)
+function handleImageUpload(prefix) { handleGalleryUpload(prefix); }
+function removeImage(prefix) { resetGalleryUI(prefix); }
+function resetImageUI(prefix) { resetGalleryUI(prefix); }
+function loadImageForEdit(prefix, base64) {
+  if(!base64) return;
+  pendingGalleries[prefix] = [{src: base64, title: ''}];
+  renderGalleryGrid(prefix);
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today's date in fields
+  const today = new Date().toISOString().split('T')[0];
+  ['th-date','lc-date'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = today;
+  });
+  renderAll();
+});
+
+// ── TABS / NAV ──
+function switchTab(tab, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  if(btn) btn.classList.add('active');
+  renderAll();
+}
+function switchNav(tab) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('nav-'+tab).classList.add('active');
+  // Also switch tab
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>{
+    const tabs=['accueil','notes','stats'];
+    if(tabs[i]===tab) b.classList.add('active'); else b.classList.remove('active');
+  });
+  renderAll();
+}
+
+// ── MODAL ──
+function openModal(type) {
+  document.getElementById('modal-'+type).classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow='';
+}
+// Close modal on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if(e.target === overlay) closeModal(overlay.id);
+  });
+});
+
+// ── TAG SELECTION ──
+function selectTag(el, group) {
+  const parent = el.parentElement;
+  parent.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTags[group] = el.textContent.trim();
+}
+function getSelectedTag(group) {
+  return selectedTags[group] || '';
+}
+
+// ── STARS ──
+function setStars(groupId, n) {
+  const container = document.getElementById(groupId);
+  const stars = container.querySelectorAll('.star');
+  stars.forEach((s, i) => s.classList.toggle('on', i < n));
+  starValues[groupId] = n;
+}
+function getStars(groupId) { return starValues[groupId] || 0; }
+
+// ── SAVE NOTE ──
+function saveNote(type) {
+  let note = { id: Date.now(), type, createdAt: new Date().toISOString() };
+
+  if(type === 'theatre') {
+    const titre = document.getElementById('th-titre').value.trim();
+    if(!titre) { showToast('❌ Titre requis !'); return; }
+    note.titre = titre;
+    note.auteur = document.getElementById('th-auteur').value.trim();
+    note.date = document.getElementById('th-date').value;
+    note.lieu = document.getElementById('th-lieu').value.trim();
+    note.categorie = getSelectedTag('th-cat');
+    note.stars = getStars('th-stars');
+    note.misescene = document.getElementById('th-misescene').value.trim();
+    note.themes = document.getElementById('th-themes').value.trim();
+    note.avis = document.getElementById('th-avis').value.trim();
+    note.repliques = document.getElementById('th-repliques').value.trim();
+    note.notes = document.getElementById('th-notes').value.trim();
+    note.emoji = '🎭';
+    note.gallery = [...pendingGalleries['th']];
+    note.image = note.gallery[0]?.src || null; // compat
+    ['th-titre','th-auteur','th-lieu','th-themes','th-misescene','th-avis','th-repliques','th-notes'].forEach(id => document.getElementById(id).value='');
+    setStars('th-stars',0);
+    selectedTags['th-cat']='';
+    document.querySelectorAll('#modal-theatre .tag').forEach(t=>t.classList.remove('selected'));
+    resetGalleryUI('th');
+    closeModal('modal-theatre');
+
+  } else if(type === 'lecon') {
+    const titre = document.getElementById('lc-titre').value.trim();
+    if(!titre) { showToast('❌ Titre requis !'); return; }
+    note.titre = titre;
+    note.matiere = document.getElementById('lc-matiere').value;
+    note.date = document.getElementById('lc-date').value;
+    note.typeNote = getSelectedTag('lc-type');
+    note.objectifs = document.getElementById('lc-objectifs').value.trim();
+    note.contenu = document.getElementById('lc-contenu').value.trim();
+    note.notions = document.getElementById('lc-notions').value.trim();
+    note.questions = document.getElementById('lc-questions').value.trim();
+    note.stars = getStars('lc-stars');
+    note.emoji = '📚';
+    note.gallery = [...pendingGalleries['lc']];
+    note.image = note.gallery[0]?.src || null;
+    ['lc-titre','lc-objectifs','lc-contenu','lc-notions','lc-questions'].forEach(id => document.getElementById(id).value='');
+    setStars('lc-stars',0);
+    selectedTags['lc-type']='';
+    document.querySelectorAll('#modal-lecon .tag').forEach(t=>t.classList.remove('selected'));
+    resetGalleryUI('lc');
+    closeModal('modal-lecon');
+
+  } else if(type === 'libre') {
+    const titre = document.getElementById('lb-titre').value.trim();
+    if(!titre) { showToast('❌ Titre requis !'); return; }
+    note.titre = titre;
+    note.cat = document.getElementById('lb-cat').value;
+    note.emoji = document.getElementById('lb-emoji').value.trim() || '💡';
+    note.contenu = document.getElementById('lb-contenu').value.trim();
+    note.humeur = getSelectedTag('lb-humeur');
+    note.gallery = [...pendingGalleries['lb']];
+    note.image = note.gallery[0]?.src || null;
+    ['lb-titre','lb-emoji','lb-contenu'].forEach(id => document.getElementById(id).value='');
+    selectedTags['lb-humeur']='';
+    document.querySelectorAll('#modal-libre .tag').forEach(t=>t.classList.remove('selected'));
+    resetGalleryUI('lb');
+    closeModal('modal-libre');
+  }
+
+  if(window._editingIdx !== undefined && window._editingIdx !== null) {
+    // Preserve original id and createdAt
+    note.id = notes[window._editingIdx].id;
+    note.createdAt = notes[window._editingIdx].createdAt;
+    notes[window._editingIdx] = note;
+    window._editingIdx = null;
+    showToast('✏️ Note modifiée avec succès !');
+  } else {
+    notes.unshift(note);
+    showToast('✅ Note sauvegardée avec succès !');
+  }
+  saveToStorage();
+  renderAll();
+}
+
+// ── RENDER ──
+function renderAll() {
+  renderRecentNotes();
+  renderAllNotes();
+  renderStats();
+}
+
+function noteCardHTML(note, idx) {
+  const preview = (note.misescene || note.contenu || note.avis || note.objectifs || '').substring(0,90) + '...';
+  const dateStr = note.date ? new Date(note.date).toLocaleDateString('fr-FR',{day:'numeric',month:'short',year:'numeric'}) : new Date(note.createdAt).toLocaleDateString('fr-FR',{day:'numeric',month:'short'});
+  const badgeClass = note.type==='theatre'?'badge-theatre':note.type==='lecon'?'badge-leçon':'badge-autre';
+  const typeLabel = note.type==='theatre'?'Théâtre':note.type==='lecon'?'Leçon':'Note libre';
+  const starsHTML = note.stars ? '⭐'.repeat(note.stars) : '';
+  const thumbHTML = note.image ? `<img class="note-thumb" src="${note.image}" alt="">` : '';
+  return `<div class="note-item" onclick="openDetail(${idx})">
+    <div class="note-item-top">
+      <span class="note-item-emoji">${note.emoji||'📝'}</span>
+      <div style="flex:1">
+        <div class="note-item-title">${note.titre}</div>
+        <div class="note-item-date">${dateStr}</div>
+      </div>
+      ${thumbHTML}
+    </div>
+    <div class="note-item-preview">${preview}</div>
+    <div class="note-item-footer">
+      <span class="note-badge ${badgeClass}">${typeLabel}</span>
+      ${note.categorie||note.matiere||note.cat ? `<span class="note-badge" style="background:rgba(233,30,140,0.08);color:var(--text-soft)">${note.categorie||note.matiere||note.cat}</span>` : ''}
+      ${starsHTML ? `<span style="font-size:0.75rem;">${starsHTML}</span>` : ''}
+      ${note.image ? `<span class="note-badge" style="background:rgba(233,30,140,0.08);color:var(--text-soft)">🖼️ Photo</span>` : ''}
+    </div>
+  </div>`;
+}
+
+function renderRecentNotes() {
+  const el = document.getElementById('recent-notes-list');
+  if(!notes.length) {
+    el.innerHTML = `<div class="empty-state"><span class="empty-emoji">🌸</span><div class="empty-title">Aucune note encore</div><div class="empty-desc">Crée ta première note en cliquant sur un bouton ci-dessous !</div></div>`;
+    return;
+  }
+  el.innerHTML = notes.slice(0,3).map((n,i) => noteCardHTML(n,i)).join('');
+}
+
+function renderAllNotes() {
+  const el = document.getElementById('all-notes-list');
+  if(!notes.length) {
+    el.innerHTML = `<div class="empty-state"><span class="empty-emoji">🌸</span><div class="empty-title">Aucune note</div><div class="empty-desc">Commence à prendre des notes !</div></div>`;
+    return;
+  }
+  const search = document.getElementById('search-input')?.value.toLowerCase()||'';
+  let filtered = notes.filter((n,i) => {
+    const matchType = currentFilter==='all' || n.type===currentFilter || (currentFilter==='autre'&&n.type==='libre');
+    const matchSearch = !search || n.titre.toLowerCase().includes(search) || (n.contenu||'').toLowerCase().includes(search) || (n.misescene||'').toLowerCase().includes(search);
+    return matchType && matchSearch;
+  });
+  if(!filtered.length) {
+    el.innerHTML = `<div class="empty-state"><span class="empty-emoji">🔍</span><div class="empty-title">Rien trouvé</div><div class="empty-desc">Essaie un autre filtre ou terme de recherche.</div></div>`;
+    return;
+  }
+  el.innerHTML = filtered.map((n) => {
+    const realIdx = notes.indexOf(n);
+    return noteCardHTML(n, realIdx);
+  }).join('');
+}
+
+function renderStats() {
+  document.getElementById('stat-total').textContent = notes.length;
+  document.getElementById('stat-theatre').textContent = notes.filter(n=>n.type==='theatre').length;
+  document.getElementById('stat-lecon').textContent = notes.filter(n=>n.type==='lecon').length;
+  // count unique days
+  const days = new Set(notes.map(n => (n.createdAt||'').split('T')[0]));
+  document.getElementById('stat-streak').textContent = days.size;
+}
+
+// ── FILTER ──
+function filterNotes(val) { renderAllNotes(); }
+function filterByTag(tag, el) {
+  currentFilter = tag;
+  document.querySelectorAll('#panel-notes .tags-wrap .tag').forEach(t=>t.classList.remove('selected'));
+  el.classList.add('selected');
+  renderAllNotes();
+}
+
+// ── DETAIL VIEW ──
+function openDetail(idx) {
+  currentNoteIdx = idx;
+  const note = notes[idx];
+  const detail = document.getElementById('detail-view');
+  document.getElementById('detail-header-label').textContent = note.type==='theatre'?'🎭 Théâtre':note.type==='lecon'?'📚 Leçon':'💡 Note';
+  const dateStr = note.date ? new Date(note.date).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'}) : new Date(note.createdAt).toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const starsHTML = note.stars ? `<div class="detail-section-title">Note</div><div style="font-size:1.4rem;">${(note.emoji==='📚'?'💜':'⭐').repeat(note.stars)}</div>` : '';
+
+  let body = '';
+  if(note.type==='theatre') {
+    body = `
+      ${note.auteur?`<div class="field-group"><span class="field-label">Auteur</span><div style="font-size:0.93rem;color:var(--text-mid)">${note.auteur}</div></div>`:``}
+      ${note.lieu?`<div class="field-group"><span class="field-label">Lieu</span><div style="font-size:0.93rem;color:var(--text-mid)">${note.lieu}</div></div>`:``}
+      ${note.categorie?`<div class="field-group"><span class="field-label">Genre</span><span class="tag tag-rose" style="cursor:default">${note.categorie}</span></div>`:``}
+      ${starsHTML}
+      ${note.misescene?`<div class="divider"></div><div class="detail-section-title">Mise en scène</div><div class="detail-body">${note.misescene}</div>`:``}
+      ${note.themes?`<div class="divider"></div><div class="detail-section-title">Thèmes</div><div class="detail-body">${note.themes}</div>`:``}
+      ${note.avis?`<div class="divider"></div><div class="detail-section-title">Mon avis</div><div class="detail-body">${note.avis}</div>`:``}
+      ${note.repliques?`<div class="divider"></div><div class="detail-section-title">Répliques mémorables</div><div class="detail-body" style="font-style:italic;border-left:3px solid var(--rose-main);padding-left:14px;margin-left:4px">${note.repliques}</div>`:``}
+      ${note.notes?`<div class="divider"></div><div class="detail-section-title">Notes complémentaires</div><div class="detail-body">${note.notes}</div>`:``}
+    `;
+  } else if(note.type==='lecon') {
+    body = `
+      ${note.matiere?`<div class="field-group"><span class="field-label">Matière</span><div style="font-size:0.93rem;color:var(--text-mid)">${note.matiere}</div></div>`:``}
+      ${note.typeNote?`<div class="field-group"><span class="field-label">Type</span><span class="tag tag-lilac" style="cursor:default">${note.typeNote}</span></div>`:``}
+      ${starsHTML}
+      ${note.objectifs?`<div class="divider"></div><div class="detail-section-title">Objectifs</div><div class="detail-body">${note.objectifs}</div>`:``}
+      ${note.contenu?`<div class="divider"></div><div class="detail-section-title">Contenu du cours</div><div class="detail-body">${note.contenu}</div>`:``}
+      ${note.notions?`<div class="divider"></div><div class="detail-section-title">Notions clés</div><div style="background:rgba(233,30,140,0.06);border-radius:14px;padding:14px 16px"><div class="detail-body">${note.notions}</div></div>`:``}
+      ${note.questions?`<div class="divider"></div><div class="detail-section-title">❓ Questions / À revoir</div><div class="detail-body" style="color:var(--rose-deep)">${note.questions}</div>`:``}
+    `;
+  } else {
+    body = `
+      ${note.cat?`<div class="field-group"><span class="field-label">Catégorie</span><div style="font-size:0.93rem;color:var(--text-mid)">${note.cat}</div></div>`:``}
+      ${note.humeur?`<div class="field-group"><span class="field-label">Humeur</span><span class="tag tag-rose" style="cursor:default">${note.humeur}</span></div>`:``}
+      ${note.contenu?`<div class="divider"></div><div class="detail-body">${note.contenu}</div>`:``}
+    `;
+  }
+
+  document.getElementById('detail-content').innerHTML = `
+    ${buildDetailGallery(note)}
+    <span class="detail-emoji-big">${note.emoji||'📝'}</span>
+    <div class="detail-main-title">${note.titre}</div>
+    <div class="detail-meta">
+      <span style="font-size:0.78rem;color:var(--text-soft);font-weight:600;">${dateStr}</span>
+    </div>
+    ${body}
+    <div style="height:32px"></div>
+  `;
+  detail.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDetail() {
+  document.getElementById('detail-view').classList.remove('open');
+  document.body.style.overflow='';
+  currentNoteIdx = null;
+}
+function deleteCurrentNote() {
+  if(currentNoteIdx===null) return;
+  if(!confirm('Supprimer cette note ?')) return;
+  notes.splice(currentNoteIdx,1);
+  saveToStorage();
+  renderAll();
+  closeDetail();
+  showToast('🗑️ Note supprimée');
+}
+
+// ── EDIT NOTE ──
+function editCurrentNote() {
+  if(currentNoteIdx===null) return;
+  const note = notes[currentNoteIdx];
+
+  if(note.type === 'theatre') {
+    document.getElementById('th-titre').value = note.titre||'';
+    document.getElementById('th-auteur').value = note.auteur||'';
+    document.getElementById('th-date').value = note.date||'';
+    document.getElementById('th-lieu').value = note.lieu||'';
+    document.getElementById('th-misescene').value = note.misescene||'';
+    document.getElementById('th-themes').value = note.themes||'';
+    document.getElementById('th-avis').value = note.avis||'';
+    document.getElementById('th-repliques').value = note.repliques||'';
+    document.getElementById('th-notes').value = note.notes||'';
+    if(note.stars) setStars('th-stars', note.stars);
+    if(note.categorie) {
+      document.querySelectorAll('#modal-theatre .tag').forEach(t=>{
+        if(t.textContent.trim()===note.categorie){ t.classList.add('selected'); selectedTags['th-cat']=note.categorie; }
+      });
+    }
+    loadGalleryForEdit('th', note.gallery || (note.image ? [{src:note.image,title:''}] : []));
+  } else if(note.type === 'lecon') {
+    document.getElementById('lc-titre').value = note.titre||'';
+    document.getElementById('lc-matiere').value = note.matiere||'';
+    document.getElementById('lc-date').value = note.date||'';
+    document.getElementById('lc-objectifs').value = note.objectifs||'';
+    document.getElementById('lc-contenu').value = note.contenu||'';
+    document.getElementById('lc-notions').value = note.notions||'';
+    document.getElementById('lc-questions').value = note.questions||'';
+    if(note.stars) setStars('lc-stars', note.stars);
+    if(note.typeNote) {
+      document.querySelectorAll('#modal-lecon .tag').forEach(t=>{
+        if(t.textContent.trim()===note.typeNote){ t.classList.add('selected'); selectedTags['lc-type']=note.typeNote; }
+      });
+    }
+    loadGalleryForEdit('lc', note.gallery || (note.image ? [{src:note.image,title:''}] : []));
+  } else {
+    document.getElementById('lb-titre').value = note.titre||'';
+    document.getElementById('lb-cat').value = note.cat||'Idée';
+    document.getElementById('lb-emoji').value = note.emoji||'💡';
+    document.getElementById('lb-contenu').value = note.contenu||'';
+    if(note.humeur) {
+      document.querySelectorAll('#modal-libre .tag').forEach(t=>{
+        if(t.textContent.trim()===note.humeur){ t.classList.add('selected'); selectedTags['lb-humeur']=note.humeur; }
+      });
+    }
+    loadGalleryForEdit('lb', note.gallery || (note.image ? [{src:note.image,title:''}] : []));
+  }
+
+  // Mark as editing mode
+  window._editingIdx = currentNoteIdx;
+  closeDetail();
+  openModal(note.type==='libre'?'libre':note.type);
+}
+
+// ── GALLERY DETAIL BUILDER ──
+function buildDetailGallery(note) {
+  const gallery = note.gallery && note.gallery.length ? note.gallery
+    : (note.image ? [{src: note.image, title: ''}] : []);
+  if(!gallery.length) return '';
+  if(gallery.length === 1) {
+    return `<img class="detail-img" src="${gallery[0].src}" alt="${gallery[0].title||''}"
+      onclick="openLightbox(${JSON.stringify(gallery).replace(/"/g,'&quot;')}, 0)" style="cursor:pointer">
+      ${gallery[0].title ? `<div style="font-size:0.80rem;color:var(--text-soft);font-weight:600;text-align:center;margin:-10px 0 18px;font-style:italic;">${gallery[0].title}</div>` : ''}`;
+  }
+  const items = gallery.map((g, i) => `
+    <div class="detail-gallery-item" onclick="openLightbox(${JSON.stringify(gallery).replace(/"/g,'&quot;')}, ${i})">
+      <img src="${g.src}" alt="${g.title||''}">
+      <div class="detail-gallery-caption">${g.title || ''}</div>
+    </div>
+  `).join('');
+  return `<div class="detail-gallery">
+    <div class="detail-gallery-title">📷 Photos (${gallery.length})</div>
+    <div class="detail-gallery-grid">${items}</div>
+  </div>`;
+}
+
+// ── LIGHTBOX ──
+let lightboxImages = [];
+let lightboxIdx = 0;
+function openLightbox(gallery, idx) {
+  lightboxImages = typeof gallery === 'string' ? JSON.parse(gallery) : gallery;
+  lightboxIdx = idx;
+  renderLightbox();
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+function renderLightbox() {
+  const item = lightboxImages[lightboxIdx];
+  document.getElementById('lightbox-img').src = item.src;
+  document.getElementById('lightbox-caption').textContent = item.title ? `${item.title} (${lightboxIdx+1}/${lightboxImages.length})` : `${lightboxIdx+1} / ${lightboxImages.length}`;
+}
+function lightboxNav(dir) {
+  lightboxIdx = (lightboxIdx + dir + lightboxImages.length) % lightboxImages.length;
+  renderLightbox();
+}
+
+// ── CLOUD SAVE (JSONBin.io) ──
+const JSONBIN_API = 'https://api.jsonbin.io/v3';
+const JSONBIN_KEY = '$2a$10$'; // Public-access bins, no auth needed for reading
+let cloudBinId = localStorage.getItem('heritina-cloud-bin-id') || '';
+
+function openCloudModal() {
+  document.getElementById('cloud-bin-id').value = cloudBinId;
+  document.getElementById('cloud-status').textContent = '';
+  document.getElementById('cloud-status').className = 'cloud-status';
+  if(cloudBinId) {
+    document.getElementById('cloud-key-display').style.display = 'block';
+    document.getElementById('cloud-key-display').textContent = '🔑 Bin ID actuel : ' + cloudBinId;
+  } else {
+    document.getElementById('cloud-key-display').style.display = 'none';
+  }
+  document.getElementById('cloud-modal').classList.add('open');
+}
+function closeCloudModal() {
+  document.getElementById('cloud-modal').classList.remove('open');
+}
+
+async function cloudSave() {
+  const status = document.getElementById('cloud-status');
+  status.className = 'cloud-status';
+  status.textContent = '⏳ Sauvegarde en cours...';
+  const binIdInput = document.getElementById('cloud-bin-id').value.trim();
+
+  // Prepare data (strip heavy gallery images to reduce payload — keep first image only per note for cloud)
+  const payload = { notes, savedAt: new Date().toISOString(), app: 'heritina-notes' };
+
+  try {
+    let url, method, headers;
+    headers = { 'Content-Type': 'application/json', 'X-Bin-Private': 'false' };
+
+    if(binIdInput) {
+      // Update existing bin
+      url = `${JSONBIN_API}/b/${binIdInput}`;
+      method = 'PUT';
+    } else {
+      // Create new bin
+      url = `${JSONBIN_API}/b`;
+      method = 'POST';
+      headers['X-Bin-Name'] = 'heritina-notes';
+    }
+
+    const res = await fetch(url, { method, headers, body: JSON.stringify(payload) });
+    if(!res.ok) throw new Error(`Erreur ${res.status}`);
+    const data = await res.json();
+    const newBinId = data.metadata?.id || binIdInput;
+    cloudBinId = newBinId;
+    localStorage.setItem('heritina-cloud-bin-id', cloudBinId);
+    document.getElementById('cloud-bin-id').value = cloudBinId;
+    document.getElementById('cloud-key-display').style.display = 'block';
+    document.getElementById('cloud-key-display').textContent = '🔑 Bin ID : ' + cloudBinId;
+    status.className = 'cloud-status success';
+    status.textContent = '✅ Notes sauvegardées ! Garde ton Bin ID précieusement.';
+  } catch(e) {
+    status.className = 'cloud-status error';
+    status.textContent = '❌ Erreur : ' + e.message + '. Vérifie ta connexion.';
+  }
+}
+
+async function cloudLoad() {
+  const status = document.getElementById('cloud-status');
+  const binId = document.getElementById('cloud-bin-id').value.trim() || cloudBinId;
+  if(!binId) {
+    status.className = 'cloud-status error';
+    status.textContent = '❌ Entre ton Bin ID pour charger tes notes.';
+    return;
+  }
+  status.className = 'cloud-status';
+  status.textContent = '⏳ Chargement en cours...';
+  try {
+    const res = await fetch(`${JSONBIN_API}/b/${binId}/latest`);
+    if(!res.ok) throw new Error(`Bin non trouvé (${res.status})`);
+    const data = await res.json();
+    const loaded = data.record?.notes;
+    if(!Array.isArray(loaded)) throw new Error('Format invalide');
+    if(!confirm(`Charger ${loaded.length} note(s) depuis le cloud ? Tes notes locales seront remplacées.`)) { status.textContent = ''; return; }
+    notes = loaded;
+    cloudBinId = binId;
+    localStorage.setItem('heritina-cloud-bin-id', cloudBinId);
+    saveToStorage();
+    renderAll();
+    status.className = 'cloud-status success';
+    status.textContent = `✅ ${loaded.length} notes chargées !`;
+  } catch(e) {
+    status.className = 'cloud-status error';
+    status.textContent = '❌ Erreur : ' + e.message;
+  }
+}
+
+function copyBinId() {
+  const id = document.getElementById('cloud-bin-id').value.trim() || cloudBinId;
+  if(!id) { showToast('❌ Aucun Bin ID à copier'); return; }
+  navigator.clipboard.writeText(id).then(() => showToast('📋 Bin ID copié !')).catch(() => showToast('❌ Copie impossible'));
+}
+
+// ── STORAGE ──
+function saveToStorage() {
+  localStorage.setItem('kawaii-notes', JSON.stringify(notes));
+}
+
+// ── TOAST ──
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+// ── EXPORT ──
+function exportNotes() {
+  if(!notes.length) { showToast('❌ Aucune note à exporter'); return; }
+  const data = JSON.stringify(notes, null, 2);
+  const blob = new Blob([data], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'kawaii-notes-'+new Date().toISOString().split('T')[0]+'.json';
+  a.click();
+  showToast('📤 Notes exportées !');
+}
+
+// ── THEME TOGGLE ──
+let isDark = false;
+function toggleTheme() {
+  isDark = !isDark;
+  if(isDark) {
+    document.documentElement.style.setProperty('--rose-pale','#1a0a12');
+    document.documentElement.style.setProperty('--glass','rgba(40,10,30,0.72)');
+    document.documentElement.style.setProperty('--text-dark','#FCE4EC');
+    document.documentElement.style.setProperty('--text-mid','#F48FB1');
+    document.documentElement.style.setProperty('--text-soft','#C06090');
+    document.body.style.background='linear-gradient(135deg,#1a0a12 0%,#2d0a20 50%,#1a0820 100%)';
+  } else {
+    document.documentElement.style.setProperty('--rose-pale','#FFF0F5');
+    document.documentElement.style.setProperty('--glass','rgba(255,255,255,0.72)');
+    document.documentElement.style.setProperty('--text-dark','#3D1A2F');
+    document.documentElement.style.setProperty('--text-mid','#7B3F6E');
+    document.documentElement.style.setProperty('--text-soft','#B06090');
+    document.body.style.background='linear-gradient(135deg,#FCE4EC 0%,#F8BBD0 25%,#CE93D8 60%,#F48FB1 100%)';
+  }
+}
+
+// ── CHECKLIST ──
+function toggleCheck(li) {
+  li.classList.toggle('done');
+}
+</script>
+</body>
+</html>
